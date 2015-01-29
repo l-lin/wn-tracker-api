@@ -1,0 +1,11 @@
+{
+	"ImportPath": "github.com/l-lin/wn-tracker-api",
+	"GoVersion": "go1.3.3",
+	"Deps": [
+		{
+			"ImportPath": "github.com/codegangsta/negroni",
+			"Comment": "v0.1-51-g2b6e86b",
+			"Rev": "2b6e86bff68451fcd38bd9e2da90e0b70e85983d"
+		}
+	]
+}
