@@ -1,0 +1,3 @@
+// Novels... obviously...
+package novel
+
