@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/codegangsta/negroni"
-	"github.com/l-lin/wn-tracker-api/novels"
+	"github.com/l-lin/wn-tracker-api/novel"
 	"github.com/gorilla/mux"
 	"github.com/unrolled/render"
 	"net/http"
@@ -13,10 +13,12 @@ import (
 
 func main() {
 	port := GetPort()
+	db := os.Getenv("DATABASE_URL")
+	log.Println(db)
 	log.Println("Listening to..." + port)
 
 	app := negroni.Classic()
-	app.UseHandler(NewRouter())
+	app.UseHandler(Router())
 	app.Run(port)
 }
 
@@ -29,16 +31,19 @@ func GetPort() string {
 	return ":" + port
 }
 
-func NewRouter() *mux.Router {
+func Router() *mux.Router {
 	r := render.New()
-	router := mux.NewRouter()
-	router.HandleFunc("/novels/{id}", func (w http.ResponseWriter, req *http.Request) {
-		vars := mux.Vars(req)
-		novel := novels.New()
-		if vars["id"] != "" {
-			novel.Id, _ = strconv.ParseInt(vars["id"], 10, 64)
-		}
-		r.JSON(w, http.StatusOK, novel)
+	muxRouter := mux.NewRouter()
+	muxRouter.HandleFunc("/novels", func (w http.ResponseWriter, req *http.Request) {
+		r.JSON(w, http.StatusOK, novel.FetchList())
 	})
-	return router
+	muxRouter.HandleFunc("/novels/{id}", func (w http.ResponseWriter, req *http.Request) {
+		vars := mux.Vars(req)
+		n := novel.New()
+		if vars["id"] != "" {
+			n.Id, _ = strconv.ParseInt(vars["id"], 10, 64)
+		}
+		r.JSON(w, http.StatusOK, n)
+	})
+	return muxRouter
 }

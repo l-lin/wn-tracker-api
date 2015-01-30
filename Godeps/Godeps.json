@@ -6,6 +6,23 @@
 			"ImportPath": "github.com/codegangsta/negroni",
 			"Comment": "v0.1-51-g2b6e86b",
 			"Rev": "2b6e86bff68451fcd38bd9e2da90e0b70e85983d"
+		},
+		{
+			"ImportPath": "github.com/gorilla/context",
+			"Rev": "215affda49addc4c8ef7e2534915df2c8c35c6cd"
+		},
+		{
+			"ImportPath": "github.com/gorilla/mux",
+			"Rev": "e444e69cbd2e2e3e0749a2f3c717cec491552bbf"
+		},
+		{
+			"ImportPath": "github.com/lib/pq",
+			"Comment": "go1.0-cutoff-21-g2ca26b3",
+			"Rev": "2ca26b30a7edcd0b0af72d372c93a2d9d9c2038a"
+		},
+		{
+			"ImportPath": "github.com/unrolled/render",
+			"Rev": "bdfac4a8df10cc9dc03ee14ba2f655137fd70378"
 		}
 	]
 }
