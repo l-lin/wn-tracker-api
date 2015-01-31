@@ -9,7 +9,7 @@ import (
 
 func main() {
 	port := GetPort()
-	log.Println("[+] Listening on...", port)
+	log.Println("[-] Listening on...", port)
 
 	app := negroni.Classic()
 	app.UseHandler(web.NewRouter())
@@ -20,7 +20,7 @@ func GetPort() string {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "4747"
-		log.Println("[+] No PORT environment variable detected. Setting to ", port)
+		log.Println("[-] No PORT environment variable detected. Setting to ", port)
 	}
 	return ":" + port
 }

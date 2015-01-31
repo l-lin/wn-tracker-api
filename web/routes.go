@@ -30,4 +30,16 @@ var routes = Routes{
 		"/novels/{id}",
 		Novel,
 	},
+	Route{
+		"UpdateNovel",
+		"PUT",
+		"/novels/{id}",
+		UpdateNovel,
+	},
+	Route{
+		"DeleteNovel",
+		"DELETE",
+		"/novels/{id}",
+		DeleteNovel,
+	},
 }
