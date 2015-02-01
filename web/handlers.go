@@ -3,7 +3,6 @@ package web
 import (
 	"github.com/l-lin/wn-tracker-api/novel"
 	"github.com/gorilla/mux"
-	oauth2 "github.com/goincremental/negroni-oauth2"
 	"net/http"
 	"encoding/json"
 	"log"
@@ -13,20 +12,20 @@ import (
 )
 
 func Novels(w http.ResponseWriter, r *http.Request) {
-	token := getToken(r)
-	if !novel.Exists(token) {
-		log.Printf("[-] No novels found for user %s. Copy the default one...", token)
-		novel.CopyDefaultFor(token)
+	userId := GetUserId(r)
+	if !novel.Exists(userId) {
+		log.Printf("[-] No novels found for user %s. Copy the default one...", userId)
+		novel.CopyDefaultFor(userId)
 	}
 
-	write(w, http.StatusOK, novel.GetList(token))
+	write(w, http.StatusOK, novel.GetList(userId))
 }
 
 func Novel(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 
-	n := novel.Get(id, getToken(r))
+	n := novel.Get(id, GetUserId(r))
 	if n != nil && n.Id != "" {
 		log.Printf("[-] Found the novel id %s", id)
 		write(w, http.StatusOK, n)
@@ -52,6 +51,7 @@ func SaveNovel(w http.ResponseWriter, r *http.Request)  {
 		write(w, 422, JsonErr{Code: 422, Text: "Could not parse the given parameter"})
 		return
 	}
+	n.UserId = GetUserId(r)
 	if !n.IsValid() {
 		write(w, http.StatusPreconditionFailed, JsonErr{
 			Code: http.StatusPreconditionFailed, Text: "The title should not be empty!",
@@ -81,6 +81,7 @@ func UpdateNovel(w http.ResponseWriter, r *http.Request)  {
 		return
 	}
 	n.Id = id
+	n.UserId = GetUserId(r)
 	if !n.IsValid() || n.Id == "" {
 		write(w, http.StatusPreconditionFailed, JsonErr{
 			Code: http.StatusPreconditionFailed, Text: "The given novel has incorrect attributes",
@@ -97,6 +98,7 @@ func DeleteNovel(w http.ResponseWriter, r *http.Request)  {
 	id := vars["id"]
 	n := novel.New()
 	n.Id = id
+	n.UserId = GetUserId(r)
 	log.Printf("[-] Deleting novel id %s", id)
 	n.Delete()
 	write(w, http.StatusNoContent, nil)
@@ -111,12 +113,4 @@ func write(w http.ResponseWriter, status int, n interface {}) {
 			panic(err)
 		}
 	}
-}
-
-func getToken(r *http.Request) string {
-	token := oauth2.GetToken(r)
-	if token == nil || !token.Valid() {
-		log.Fatal("[x] The user is not authenticated yet!")
-	}
-	return token.Access()
 }

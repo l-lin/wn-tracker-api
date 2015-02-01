@@ -5,9 +5,9 @@ import "testing"
 func Test_IsValid(t *testing.T) {
 	n := New()
 	if n.IsValid() {
-		t.Fatalf("[x] The novel should not be valid with an empty token, title and url!")
+		t.Fatalf("[x] The novel should not be valid with an empty userId, title and url!")
 	}
-	n.Token = "Token"
+	n.UserId = "UserId"
 	if n.IsValid() {
 		t.Fatalf("[x] The novel should be valid with an empty title and url!")
 	}

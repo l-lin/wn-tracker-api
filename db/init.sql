@@ -291,7 +291,7 @@ VALUES (
 
 CREATE TABLE novels (
   id           VARCHAR   DEFAULT uuid_generate_v4(),
-  token        VARCHAR NOT NULL,
+  user_id      VARCHAR NOT NULL,
   title        VARCHAR NOT NULL,
   url          VARCHAR NOT NULL,
   feed_url     VARCHAR,
