@@ -6,10 +6,12 @@ import (
 	"os"
 )
 
+// Interface to map the result of row to an interface
 type RowMapper interface {
 	Scan(dest ...interface{}) error
 }
 
+// Connect to Heroku database using the OS env DATABASE_URL
 func Connect() *sql.DB {
 	dbUrl := os.Getenv("DATABASE_URL")
 	database, err := sql.Open("postgres", dbUrl)

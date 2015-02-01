@@ -3,6 +3,7 @@ package web
 import (
 	"github.com/l-lin/wn-tracker-api/novel"
 	"github.com/gorilla/mux"
+	oauth2 "github.com/goincremental/negroni-oauth2"
 	"net/http"
 	"encoding/json"
 	"log"
@@ -12,14 +13,20 @@ import (
 )
 
 func Novels(w http.ResponseWriter, r *http.Request) {
-	write(w, http.StatusOK, novel.GetList())
+	token := getToken(r)
+	if !novel.Exists(token) {
+		log.Printf("[-] No novels found for user %s. Copy the default one...", token)
+		novel.CopyDefaultFor(token)
+	}
+
+	write(w, http.StatusOK, novel.GetList(token))
 }
 
 func Novel(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 
-	n := novel.Get(id)
+	n := novel.Get(id, getToken(r))
 	if n != nil && n.Id != "" {
 		log.Printf("[-] Found the novel id %s", id)
 		write(w, http.StatusOK, n)
@@ -104,4 +111,12 @@ func write(w http.ResponseWriter, status int, n interface {}) {
 			panic(err)
 		}
 	}
+}
+
+func getToken(r *http.Request) string {
+	token := oauth2.GetToken(r)
+	if token == nil || !token.Valid() {
+		log.Fatal("[x] The user is not authenticated yet!")
+	}
+	return token.Access()
 }
