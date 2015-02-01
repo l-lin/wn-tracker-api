@@ -104,8 +104,8 @@ func DeleteNovel(w http.ResponseWriter, r *http.Request)  {
 	write(w, http.StatusNoContent, nil)
 }
 
-func Login(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "You are authenticated!")
+func SignIn(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "You are now authenticated! You can close this tab.")
 }
 
 func write(w http.ResponseWriter, status int, n interface {}) {
