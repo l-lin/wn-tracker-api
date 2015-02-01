@@ -8,6 +8,14 @@
 			"Rev": "2b6e86bff68451fcd38bd9e2da90e0b70e85983d"
 		},
 		{
+			"ImportPath": "github.com/goincremental/negroni-oauth2",
+			"Rev": "556f42c0809b598c42a22056a95fd8f14aa296b2"
+		},
+		{
+			"ImportPath": "github.com/goincremental/negroni-sessions",
+			"Rev": "e5d5fbe030b0f98cc4bfa1729c0491d1408b25fb"
+		},
+		{
 			"ImportPath": "github.com/gorilla/context",
 			"Rev": "215affda49addc4c8ef7e2534915df2c8c35c6cd"
 		},
@@ -16,9 +24,25 @@
 			"Rev": "e444e69cbd2e2e3e0749a2f3c717cec491552bbf"
 		},
 		{
+			"ImportPath": "github.com/gorilla/securecookie",
+			"Rev": "f0559d009e6943011cd1ba6eb16195cf5e0ed326"
+		},
+		{
+			"ImportPath": "github.com/gorilla/sessions",
+			"Rev": "13c86220d944600e7a6e3de6c87418896ccfbe77"
+		},
+		{
 			"ImportPath": "github.com/lib/pq",
 			"Comment": "go1.0-cutoff-21-g2ca26b3",
 			"Rev": "2ca26b30a7edcd0b0af72d372c93a2d9d9c2038a"
+		},
+		{
+			"ImportPath": "golang.org/x/net/context",
+			"Rev": "9dd48c277bcb2bb2cc3eb6a6368a486a567d3562"
+		},
+		{
+			"ImportPath": "golang.org/x/oauth2",
+			"Rev": "2b74ab268d043de5b0577a4773e67df08135e06d"
 		}
 	]
 }
