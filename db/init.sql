@@ -13,7 +13,7 @@ INSERT INTO default_novels (title, url, feed_url, image_url, summary, favorite)
 VALUES (
   'Overlord',
   'http://skythewood.blogspot.sg/p/knights-and-magic-author-amazake-no.html',
-  'https://www.blogger.com/feeds/4225665848364118863/posts/default',
+  'http://skythewood.blogspot.com/feeds/posts/default',
   'http://4.bp.blogspot.com/-c0DBPG-s_28/VEb8GzDZ2yI/AAAAAAAAApQ/tcl9rCbAmoQ/s1600/1.jpg',
   'After announcing it will be discontinuing all service, the internet game "Yggdrasil" shut downs -- That was the plan. But for some reasons, the player character did not log out some time after the server was closed. NPC starts to become sentient. A normal youth who loves gaming in the real world seemed to have been transported into an alternate world along with his guild, becoming the strongest mage with the appearance of a skeleton, Momonga. He leads his guild "Ainz Ooal Gown" towards an unprecedented legendary fantasy adventure!',
   TRUE
@@ -22,7 +22,7 @@ INSERT INTO default_novels (title, url, feed_url, image_url, summary, favorite)
 VALUES (
   'Altina',
   'http://skythewood.blogspot.sg/p/altina-sword-princess.html',
-  'https://www.blogger.com/feeds/4225665848364118863/posts/default',
+  'http://skythewood.blogspot.com/feeds/posts/default',
   'http://1.bp.blogspot.com/-AyC6RgreYRM/VDqYzsqFRvI/AAAAAAAAAj8/V6Ljf9LlxOY/s1600/a.JPG',
   'Unskilled in both swords and bows, Regis is a soldier who ranks at the bottom in military academy who is obsessed with books. After being banished to the borders, he met a girl who changed his destiny. With red hair and crimson eyes, Princess Altina who holds the sword of kings. Although she is a daughter of a concubine, she was appointed as the commander of the border regiment at the tender age of 14. But she did not lament her circumstances and bears higher aspiration. "I believe in you." Regis received the request of the girl to be her strategist and forge through many hardships. The sword princess and the biblophile youth embark on their fantasy war story --',
   TRUE
@@ -31,7 +31,7 @@ INSERT INTO default_novels (title, url, feed_url, image_url, summary, favorite)
 VALUES (
   'Knight''s and magic',
   'http://skythewood.blogspot.sg/p/blog-page.html',
-  'https://www.blogger.com/feeds/4225665848364118863/posts/default',
+  'http://skythewood.blogspot.com/feeds/posts/default',
   'http://4.bp.blogspot.com/-DhrMa-Qsi9s/VMjI3c-ZaYI/AAAAAAAABDg/mlN8BPNZ1EI/s1600/414px-Knights_and_Magic_v1_Cover.jpg',
   'A young man from Japan passed away after a traffic accident. His soul was reincarnated in an alternate world into the body of a pretty young boy Ernesti Echevarria with his memories intact. Influenced by his hobby from his previous life, Eru is a ''robot nerd'' in this life too. He meets the giant humanoid battle robots in this world -- Silhouette Knights. The elated Eru started a series of plans in order to pilot the robots. He drags his childhood friend in this world along as he messes around in this world to satisfy his desire for robots.',
   TRUE

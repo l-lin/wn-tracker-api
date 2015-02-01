@@ -2,7 +2,7 @@ package rss
 
 import (
 	"testing"
-	"fmt"
+	"log"
 )
 
 func Test_FindRssFeedUrl(t *testing.T) {
@@ -18,6 +18,17 @@ func Test_FindRssFeedUrl(t *testing.T) {
 	}
 }
 
+func Test_ParseRssFeed(t *testing.T) {
+	url := "http://www.wuxiaworld.com/feed/"
+	c := make(chan *RSS)
+	go ParseRssFeed(url, c)
+	rss := <- c
+	if rss == nil {
+		t.Fatalf("[x] The RSS feed should not be nil!")
+	}
+	log.Printf("[-] RSS feed title is: %s", rss.Items.Title)
+}
+
 func testWithUrl(t *testing.T, url string) {
 	c := make(chan string)
 	go FindRssFeedUrl(url, c)
@@ -25,5 +36,5 @@ func testWithUrl(t *testing.T, url string) {
 	if rssFeedUrl == "" {
 		t.Fatalf("[x] The rss feed of %s should not be empty!", url)
 	}
-	fmt.Printf("[-] RSS Feed URL: %s\n", rssFeedUrl)
+	log.Printf("[-] RSS Feed URL: %s\n", rssFeedUrl)
 }
