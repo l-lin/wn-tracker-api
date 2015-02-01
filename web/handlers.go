@@ -104,6 +104,10 @@ func DeleteNovel(w http.ResponseWriter, r *http.Request)  {
 	write(w, http.StatusNoContent, nil)
 }
 
+func AuthTest(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "You are authenticated!")
+}
+
 func write(w http.ResponseWriter, status int, n interface {}) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(status)

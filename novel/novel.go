@@ -152,7 +152,7 @@ func (n *Novel) IsValid() bool {
 // Fetch the content of the rows and build a new default novel
 func toNovel(rows db.RowMapper) *Novel {
 	novel := New()
-	err := rows.Scan(&novel.Id, &novel.UserId, &novel.Title, &novel.FeedUrl, &novel.Url, &novel.ImageUrl, &novel.Summary, &novel.Favorite, &novel.LastUpdated)
+	err := rows.Scan(&novel.Id, &novel.UserId, &novel.Title, &novel.Url, &novel.FeedUrl, &novel.ImageUrl, &novel.Summary, &novel.Favorite, &novel.LastUpdated)
 	if err != nil {
 		log.Printf("[-] Could not scan the novel. Reason: %s", err.Error())
 	}

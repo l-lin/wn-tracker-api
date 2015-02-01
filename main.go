@@ -12,9 +12,6 @@ import (
 )
 
 func main() {
-	port := getPort()
-	log.Println("[-] Listening on...", port)
-
 	secure := negroni.Classic()
 	secure.Use(oauth2.LoginRequired())
 	secure.UseHandler(web.NewRouter())
@@ -22,14 +19,14 @@ func main() {
 	router := http.NewServeMux()
 	router.Handle("/", secure)
 
-	app := negroni.Classic()
+	app := negroni.New()
 	app.Use(sessions.Sessions("my_session", cookiestore.New([]byte("secret123"))))
 	app.Use(web.NewOAuth())
 	app.UseHandler(router)
-	app.Run(port)
+	app.Run(port())
 }
 
-func getPort() string {
+func port() string {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "4747"

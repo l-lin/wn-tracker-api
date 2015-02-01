@@ -13,6 +13,12 @@ type Routes []Route
 
 var routes = Routes{
 	Route{
+		"AuthTest",
+		"GET",
+		"/authTest",
+		AuthTest,
+	},
+	Route{
 		"Novels",
 		"GET",
 		"/novels",
