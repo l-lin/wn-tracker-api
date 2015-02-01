@@ -104,7 +104,7 @@ func DeleteNovel(w http.ResponseWriter, r *http.Request)  {
 	write(w, http.StatusNoContent, nil)
 }
 
-func AuthTest(w http.ResponseWriter, r *http.Request) {
+func Login(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "You are authenticated!")
 }
 

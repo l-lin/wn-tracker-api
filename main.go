@@ -2,13 +2,13 @@ package main
 
 import (
 	"github.com/codegangsta/negroni"
+	"github.com/gorilla/mux"
 	"github.com/l-lin/wn-tracker-api/web"
 	oauth2 "github.com/goincremental/negroni-oauth2"
 	sessions "github.com/goincremental/negroni-sessions"
 	"github.com/goincremental/negroni-sessions/cookiestore"
 	"os"
 	"log"
-	"net/http"
 )
 
 func main() {
@@ -16,8 +16,9 @@ func main() {
 	secure.Use(oauth2.LoginRequired())
 	secure.UseHandler(web.NewRouter())
 
-	router := http.NewServeMux()
+	router := mux.NewRouter()
 	router.Handle("/", secure)
+	router.HandleFunc("/authTest", web.AuthTest)
 
 	app := negroni.New()
 	app.Use(sessions.Sessions("my_session", cookiestore.New([]byte("secret123"))))
