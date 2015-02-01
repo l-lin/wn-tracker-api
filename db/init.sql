@@ -121,7 +121,7 @@ INSERT INTO default_novels (title, url, feed_url, image_url, summary, favorite)
 VALUES (
   'Coiling Dragon',
   'http://www.wuxiaworld.com/cdindex-html/',
-  '',
+  'http://www.wuxiaworld.com/feed/',
   'https://www.mangaupdates.com/image/i206448.jpg',
   'Linley is a young noble of a declining clan. He has large aspirations and wants to save his clan. Linley''s journey begins with an accident when he discovers a ring. He took a liking to this ring with a dragon coiling around its entirety. Upon being injured during a battle between two powerful fighters he discovers that his ring is not what he thought it was and possesses powers beyond his imagination.',
   FALSE

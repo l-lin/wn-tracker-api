@@ -2,6 +2,7 @@ package web
 
 import (
 	"github.com/l-lin/wn-tracker-api/novel"
+	"github.com/l-lin/wn-tracker-api/rss"
 	"github.com/gorilla/mux"
 	"net/http"
 	"encoding/json"
@@ -12,7 +13,9 @@ import (
 )
 
 func Novels(w http.ResponseWriter, r *http.Request) {
-	userId := GetUserId(r)
+	userC := make(chan string)
+	go GetUserId(r, userC)
+	userId := <- userC
 	if !novel.Exists(userId) {
 		log.Printf("[-] No novels found for user %s. Copy the default one...", userId)
 		novel.CopyDefaultFor(userId)
@@ -25,7 +28,11 @@ func Novel(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 
-	n := novel.Get(id, GetUserId(r))
+	userC := make(chan string)
+	go GetUserId(r, userC)
+	userId := <- userC
+
+	n := novel.Get(id, userId)
 	if n != nil && n.Id != "" {
 		log.Printf("[-] Found the novel id %s", id)
 		write(w, http.StatusOK, n)
@@ -51,13 +58,21 @@ func SaveNovel(w http.ResponseWriter, r *http.Request)  {
 		write(w, 422, JsonErr{Code: 422, Text: "Could not parse the given parameter"})
 		return
 	}
-	n.UserId = GetUserId(r)
+
+	userC := make(chan string)
+	rssC := make(chan string)
+	go GetUserId(r, userC)
+	go rss.FindRssFeedUrl(n.Url, rssC)
+	n.UserId = <- userC
+	n.FeedUrl = <- rssC
+
 	if !n.IsValid() {
 		write(w, http.StatusPreconditionFailed, JsonErr{
 			Code: http.StatusPreconditionFailed, Text: "The title should not be empty!",
 		})
 		return
 	}
+
 	log.Printf("[-] Creating new novel with title %s", n.Title)
 	n.Save()
 	write(w, http.StatusCreated, n)
@@ -81,7 +96,14 @@ func UpdateNovel(w http.ResponseWriter, r *http.Request)  {
 		return
 	}
 	n.Id = id
-	n.UserId = GetUserId(r)
+
+	userC := make(chan string)
+	rssC := make(chan string)
+	go GetUserId(r, userC)
+	go rss.FindRssFeedUrl(n.Url, rssC)
+	n.UserId = <- userC
+	n.FeedUrl = <- rssC
+
 	if !n.IsValid() || n.Id == "" {
 		write(w, http.StatusPreconditionFailed, JsonErr{
 			Code: http.StatusPreconditionFailed, Text: "The given novel has incorrect attributes",
@@ -98,7 +120,11 @@ func DeleteNovel(w http.ResponseWriter, r *http.Request)  {
 	id := vars["id"]
 	n := novel.New()
 	n.Id = id
-	n.UserId = GetUserId(r)
+
+	userC := make(chan string)
+	go GetUserId(r, userC)
+	n.UserId = <- userC
+
 	log.Printf("[-] Deleting novel id %s", id)
 	n.Delete()
 	write(w, http.StatusNoContent, nil)

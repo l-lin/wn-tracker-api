@@ -36,7 +36,7 @@ func AuthTest(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GetUserId(r *http.Request) string {
+func GetUserId(r *http.Request, c chan string) {
 	token := oauth2.GetToken(r)
 	if token == nil || !token.Valid() {
 		log.Fatal("[x] The user is not authenticated yet!")
@@ -59,5 +59,5 @@ func GetUserId(r *http.Request) string {
 	if err != nil {
 		log.Fatalf("[x] Could not unmarshal the user info. Reason: %s", err.Error())
 	}
-	return userInfo.Id
+	c <- userInfo.Id
 }
