@@ -9,7 +9,7 @@ Fetch the projet and install the dependencies:
 ```go
 go get github.com/l-lin/wn-tracker-api
 go get github.com/tools/godep
-cd $GOHOME/github/l-lin/wn-tracker-api
+cd $GOPATH/github/l-lin/wn-tracker-api
 godep go install
 ```
 
