@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/codegangsta/negroni"
 	"github.com/l-lin/wn-tracker-api/web"
+	"github.com/l-lin/wn-tracker-api/feed"
 	oauth2 "github.com/goincremental/negroni-oauth2"
 	sessions "github.com/goincremental/negroni-sessions"
 	"github.com/goincremental/negroni-sessions/cookiestore"
@@ -19,6 +20,8 @@ func main() {
 	router := http.NewServeMux()
 	router.Handle("/", secure)
 	router.HandleFunc("/notification", web.Notification)
+
+	feed.NewCronRss()
 
 	app := negroni.New()
 	app.Use(sessions.Sessions("my_session", cookiestore.New([]byte("secret123"))))

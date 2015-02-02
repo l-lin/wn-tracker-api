@@ -13,7 +13,7 @@ INSERT INTO default_novels (title, url, feed_url, image_url, summary, favorite)
 VALUES (
   'Overlord',
   'http://skythewood.blogspot.sg/p/knights-and-magic-author-amazake-no.html',
-  'http://skythewood.blogspot.com/feeds/posts/default',
+  'http://skythewood.blogspot.com/feeds/posts/default?alt=rss',
   'http://4.bp.blogspot.com/-c0DBPG-s_28/VEb8GzDZ2yI/AAAAAAAAApQ/tcl9rCbAmoQ/s1600/1.jpg',
   'After announcing it will be discontinuing all service, the internet game "Yggdrasil" shut downs -- That was the plan. But for some reasons, the player character did not log out some time after the server was closed. NPC starts to become sentient. A normal youth who loves gaming in the real world seemed to have been transported into an alternate world along with his guild, becoming the strongest mage with the appearance of a skeleton, Momonga. He leads his guild "Ainz Ooal Gown" towards an unprecedented legendary fantasy adventure!',
   TRUE
@@ -22,7 +22,7 @@ INSERT INTO default_novels (title, url, feed_url, image_url, summary, favorite)
 VALUES (
   'Altina',
   'http://skythewood.blogspot.sg/p/altina-sword-princess.html',
-  'http://skythewood.blogspot.com/feeds/posts/default',
+  'http://skythewood.blogspot.com/feeds/posts/default?alt=rss',
   'http://1.bp.blogspot.com/-AyC6RgreYRM/VDqYzsqFRvI/AAAAAAAAAj8/V6Ljf9LlxOY/s1600/a.JPG',
   'Unskilled in both swords and bows, Regis is a soldier who ranks at the bottom in military academy who is obsessed with books. After being banished to the borders, he met a girl who changed his destiny. With red hair and crimson eyes, Princess Altina who holds the sword of kings. Although she is a daughter of a concubine, she was appointed as the commander of the border regiment at the tender age of 14. But she did not lament her circumstances and bears higher aspiration. "I believe in you." Regis received the request of the girl to be her strategist and forge through many hardships. The sword princess and the biblophile youth embark on their fantasy war story --',
   TRUE
@@ -31,7 +31,7 @@ INSERT INTO default_novels (title, url, feed_url, image_url, summary, favorite)
 VALUES (
   'Knight''s and magic',
   'http://skythewood.blogspot.sg/p/blog-page.html',
-  'http://skythewood.blogspot.com/feeds/posts/default',
+  'http://skythewood.blogspot.com/feeds/posts/default?alt=rss',
   'http://4.bp.blogspot.com/-DhrMa-Qsi9s/VMjI3c-ZaYI/AAAAAAAABDg/mlN8BPNZ1EI/s1600/414px-Knights_and_Magic_v1_Cover.jpg',
   'A young man from Japan passed away after a traffic accident. His soul was reincarnated in an alternate world into the body of a pretty young boy Ernesti Echevarria with his memories intact. Influenced by his hobby from his previous life, Eru is a ''robot nerd'' in this life too. He meets the giant humanoid battle robots in this world -- Silhouette Knights. The elated Eru started a series of plans in order to pilot the robots. He drags his childhood friend in this world along as he messes around in this world to satisfy his desire for robots.',
   TRUE
@@ -67,7 +67,7 @@ INSERT INTO default_novels (title, url, feed_url, image_url, summary, favorite)
 VALUES (
   'Legendary moonlight sculptor',
   'http://jawztranslations.blogspot.fr/p/legendary-moonlight-sculptor.html',
-  'http://jawztranslations.blogspot.com/feeds/posts/default',
+  'http://jawztranslations.blogspot.com/feeds/posts/default?alt=rss',
   'http://japtem.com/wp-content/uploads/2013/06/lmsrelease.png',
   'Lee Hyun, a debt-ridden teenage orphan, puts his account of the top-level avatar in the Continent of Magic up for auction. Once the news is spread nationwide, a fierce competition to win his avatar breaks out, making him a multimillionaire overnight. However, when men in black show up to collect the debts Hyun''s parents owed them; he ends up where he started — almost penniless. Determined to exact revenge on the loan sharks, he sets out a journey with Weed as his alias, the lowliest of the lowly, in the online RPG game named Royal Road to prove history can repeat itself. WHY NOT CLAIM THE TOP ONCE AGAIN? Weed''s sugary words and tough action work magic one after another — only until he finds himself becoming a Sculptor, the most contemptible profession in terms of combat ability and career prospect…',
   TRUE
@@ -76,7 +76,7 @@ INSERT INTO default_novels (title, url, feed_url, image_url, summary, favorite)
 VALUES (
   'Zectas',
   'http://jawztranslations.blogspot.fr/p/zectas.html',
-  'http://jawztranslations.blogspot.com/feeds/posts/default',
+  'http://jawztranslations.blogspot.com/feeds/posts/default?alt=rss',
   '',
   'At 18 years old, Nash Smoak maintains three jobs. He works as an assistant to the cook in a small diner, he is shadily hired as a construction worker, and works as an attendant at a game arcade. Nash needs to take on those jobs in order to support his two brothers and sickly Grandma. Ever since the tragic accident of his parent''s death. He took it upon himself to support his family. After being worked to the bone, Nash found that sacred place, his paradise of relief, the Virtual Reality World of Zectas. However, his only sanctuary was destroyed when a group of high level players used him as bait in one of their quests. Nash was captured and tortured by the Legendary Monster! Little did they know that this incident would cause the birth of the Legendary User Smoke!',
   FALSE
@@ -85,7 +85,7 @@ INSERT INTO default_novels (title, url, feed_url, image_url, summary, favorite)
 VALUES (
   'Drezo regalia',
   'http://jawztranslations.blogspot.fr/p/drezo-regalia.html',
-  'http://jawztranslations.blogspot.com/feeds/posts/default',
+  'http://jawztranslations.blogspot.com/feeds/posts/default?alt=rss',
   'https://lh5.googleusercontent.com/vgsmfqMS9EAs3Jvn6OjRqN5NgSCbLNSdyjqe1wonscUT6KSVtRlKOlT9ATHOgHgfXuDu30zVoX2LmrT0vQXQea7BiwejqyPQzbltETnQrQ-dwf5DoRHaXxvlOvqDRVMsow',
   'Yami Hikari company had created a new game gear called the Embyro that are split into two different gears: the first is the deep dive gear called ‘Sense'' and the second is high tech glasses called ‘Alive.'' One is made to transport the players mind to a virtual world, while the other is the next generation new technology that incorporates the reality with the game. A game where it test the limits of technology and human boundaries. What is real? What is fake? Who is right or wrong? What is the Seed? Is life just a game? Three different people''s destinies are intertwined: One is on a mission, One wants change in life, and One wants to be left alone. Their story converges in a Virtual Reality MMO game called Growth. This is a story of Zero, Agnis, and BlackStar.',
   FALSE
@@ -193,7 +193,7 @@ INSERT INTO default_novels (title, url, feed_url, image_url, summary, favorite)
 VALUES (
   'EC',
   'http://ecwebnovel.blogspot.ca/',
-  'http://ecwebnovel.blogspot.com/feeds/posts/default',
+  'http://ecwebnovel.blogspot.com/feeds/posts/default?alt=rss',
   '',
   'In the distant future, after humanity''s revival following an apocalyptic event, an inquisitive woman, a young man abandoned by his country, a youth seeking redemption and an isolated young prodigy meet by chance in a game promoted by a certain company.  Tricked into running an Academy, the tale follows their lives and adventures in a world not their own.',
   FALSE
@@ -290,7 +290,7 @@ VALUES (
 );
 
 CREATE TABLE novels (
-  id        VARCHAR PRIMARY KEY DEFAULT uuid_generate_v4(),
+  novel_id  VARCHAR PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id   VARCHAR NOT NULL,
   title     VARCHAR NOT NULL,
   url       VARCHAR NOT NULL,
@@ -300,7 +300,17 @@ CREATE TABLE novels (
 );
 
 CREATE TABLE feeds (
-  id           VARCHAR REFERENCES novels ON DELETE CASCADE,
-  url          VARCHAR NOT NULL,
-  last_updated TIMESTAMP DEFAULT now()
+  feed_id      VARCHAR PRIMARY KEY DEFAULT uuid_generate_v4(),
+  novel_id     VARCHAR REFERENCES novels ON DELETE CASCADE,
+  feed_url     VARCHAR NOT NULL,
+  last_updated TIMESTAMP           DEFAULT now()
+);
+
+CREATE TABLE notifications (
+  notification_id VARCHAR PRIMARY KEY DEFAULT uuid_generate_v4(),
+  feed_id         VARCHAR REFERENCES feeds ON DELETE CASCADE,
+  title           VARCHAR,
+  link            VARCHAR,
+  description     VARCHAR,
+  pub_date        TIMESTAMP
 );

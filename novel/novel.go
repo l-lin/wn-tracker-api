@@ -2,26 +2,21 @@ package novel
 
 import (
 	"github.com/l-lin/wn-tracker-api/db"
+	"github.com/l-lin/wn-tracker-api/feed"
 	_ "github.com/lib/pq"
 	"log"
-	"time"
 )
 
 // The Novel representation
 type Novel struct {
-	Id          string        `json:"id"`
+	NovelId     string        `json:"novelId"`
 	UserId      string        `json:"-"`
 	Title       string        `json:"title"`
 	Url         string        `json:"url"`
 	ImageUrl    string        `json:"imageUrl"`
 	Summary     string        `json:"summary"`
-	Favorite    bool        `json:"favorite"`
-	Feed
-}
-
-type Feed struct {
-	FeedUrl     string        `json:"feedUrl"`
-	LastUpdated time.Time    `json:"-"`
+	Favorite    bool          `json:"favorite"`
+	feed.Feed
 }
 
 // Instanciate a new Novel
@@ -55,7 +50,7 @@ func CopyDefaultFor(userId string) {
 		tx.Rollback()
 		log.Fatalf("[x] Could not copy the default novels. Reason: %s", err.Error())
 	}
-	_, err = tx.Exec("INSERT INTO feeds (id, url) SELECT n.id, dn.url FROM novels n JOIN default_novels dn ON dn.url = n.url WHERE user_id = $1", userId)
+	_, err = tx.Exec("INSERT INTO feeds (novel_id, feed_url) SELECT n.novel_id, dn.feed_url FROM novels n JOIN default_novels dn ON dn.url = n.url WHERE user_id = $1", userId)
 	if err != nil {
 		tx.Rollback()
 		log.Fatalf("[x] Could not copy the default feeds. Reason: %s", err.Error())
@@ -65,17 +60,17 @@ func CopyDefaultFor(userId string) {
 	}
 }
 
-// Get the Novel given an id
-func Get(id, userId string) *Novel {
+// Get the Novel given an novelId
+func Get(novelId, userId string) *Novel {
 	database := db.Connect()
 	defer database.Close()
 
 	row := database.QueryRow(`
-	SELECT n.id, n.user_id, n.title, n.url, n.image_url, n.summary, n.favorite, f.url, f.last_updated
+	SELECT n.novel_id, n.user_id, n.title, n.url, n.image_url, n.summary, n.favorite, f.feed_url, f.last_updated
 	FROM novels n
-	 JOIN feeds f on f.id = n.id
-	WHERE id = $1 AND user_id = $2`,
-		id, userId)
+	 JOIN feeds f on f.novel_id = n.novel_id
+	WHERE n.novel_id = $1 AND n.user_id = $2`,
+		novelId, userId)
 	return toNovel(row)
 }
 
@@ -86,10 +81,10 @@ func GetList(userId string) []*Novel {
 	defer database.Close()
 
 	rows, err := database.Query(`
-	SELECT n.id, n.user_id, n.title, n.url, n.image_url, n.summary, n.favorite, f.url, f.last_updated
+	SELECT n.novel_id, n.user_id, n.title, n.url, n.image_url, n.summary, n.favorite, f.feed_url, f.last_updated
 	FROM novels n
-	 JOIN feeds f on f.id = n.id
-	WHERE user_id = $1`,
+	 JOIN feeds f on f.novel_id = n.novel_id
+	WHERE n.user_id = $1`,
 		userId)
 	if err != nil {
 		log.Fatalf("[x] Error when getting the list of novels. Reason: %s", err.Error())
@@ -114,17 +109,24 @@ func (n *Novel) Save() {
 	if err != nil {
 		log.Fatalf("[x] Could not start the transaction. Reason: %s", err.Error())
 	}
-	row := tx.QueryRow("INSERT INTO novels (user_id, title, url, image_url, summary, favorite) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id",
-		n.UserId, n.Title, n.Url, n.FeedUrl, n.ImageUrl, n.Summary, n.Favorite)
+	row := tx.QueryRow("INSERT INTO novels (user_id, title, url, image_url, summary, favorite) VALUES ($1, $2, $3, $4, $5, $6) RETURNING novel_id",
+		n.UserId, n.Title, n.Url, n.ImageUrl, n.Summary, n.Favorite)
 	var lastId string
 	if err := row.Scan(&lastId); err != nil {
 		tx.Rollback()
-		log.Fatalf("[x] Could not fetch the id of the newly created novel. Reason: %s", err.Error())
+		log.Fatalf("[x] Could not fetch the novel_id of the newly created novel. Reason: %s", err.Error())
 	}
+	n.NovelId = lastId
+	row = tx.QueryRow("INSERT INTO feeds (novel_id, feed_url) VALUES ($1, $2) RETURNING feed_id", n.NovelId, n.FeedUrl)
+	var feedId string
+	if err := row.Scan(&feedId); err != nil {
+		tx.Rollback()
+		log.Fatalf("[x] Could not create the feeds. Reason: %s", err.Error())
+	}
+	n.FeedId = feedId
 	if err := tx.Commit(); err != nil {
 		log.Fatalf("[x] Could not commit the transaction. Reason: %s", err.Error())
 	}
-	n.Id = lastId
 }
 
 // Update the novel in the database
@@ -136,17 +138,14 @@ func (n *Novel) Update() {
 		log.Fatalf("[x] Could not start the transaction. Reason: %s", err.Error())
 	}
 	_, err = tx.Exec(`
-	UPDATE novels SET title = $1, url = $2, image_url = $5, summary = $6, favorite = $7
-	WHERE id = $8 AND user_id = $9`,
-		n.Title, n.Url, n.ImageUrl, n.Summary, n.Favorite, n.Id, n.UserId)
+	UPDATE novels SET title = $1, url = $2, image_url = $3, summary = $4, favorite = $5
+	WHERE novel_id = $6 AND user_id = $7`,
+		n.Title, n.Url, n.ImageUrl, n.Summary, n.Favorite, n.NovelId, n.UserId)
 	if err != nil {
-		log.Fatalf("[x] Could not update the novel. Reason: %s", err.Error())
 		tx.Rollback()
+		log.Fatalf("[x] Could not update the novel. Reason: %s", err.Error())
 	}
-	_, err = tx.Exec(`
-	UPDATE feeds SET url = $1, last_updated = $2
-	WHERE id = $3 AND user_id = $4`,
-		n.FeedUrl, time.Now(), n.Id, n.UserId)
+	_, err = tx.Exec("UPDATE feeds SET feed_url = $1 WHERE novel_id = $2", n.FeedUrl, n.NovelId)
 	if err != nil {
 		tx.Rollback()
 		log.Fatalf("[x] Could not update the feeds. Reason: %s", err.Error())
@@ -157,6 +156,7 @@ func (n *Novel) Update() {
 	}
 }
 
+// Delete a novel
 func (n *Novel) Delete() {
 	database := db.Connect()
 	defer database.Close()
@@ -164,10 +164,10 @@ func (n *Novel) Delete() {
 	if err != nil {
 		log.Fatalf("[x] Could not start the transaction. Reason: %s", err.Error())
 	}
-	_, err = tx.Exec("DELETE FROM novels WHERE id = $1 AND user_id = $2", n.Id, n.UserId)
+	_, err = tx.Exec("DELETE FROM novels WHERE novel_id = $1 AND user_id = $2", n.NovelId, n.UserId)
 	if err != nil {
-		log.Fatalf("[x] Could not delete the novel. Reason: %s", err.Error())
 		tx.Rollback()
+		log.Fatalf("[x] Could not delete the novel. Reason: %s", err.Error())
 	}
 	if err := tx.Commit(); err != nil {
 		log.Fatalf("[x] Could not commit the transaction. Reason: %s", err.Error())
@@ -183,7 +183,7 @@ func (n *Novel) IsValid() bool {
 func toNovel(rows db.RowMapper) *Novel {
 	novel := New()
 	err := rows.Scan(
-		&novel.Id,
+		&novel.NovelId,
 		&novel.UserId,
 		&novel.Title,
 		&novel.Url,

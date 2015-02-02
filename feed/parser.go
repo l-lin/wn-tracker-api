@@ -1,4 +1,4 @@
-package rss
+package feed
 
 import (
 	"regexp"
@@ -26,10 +26,17 @@ type Item struct {
 	PubDate        string `xml:"pubDate"`
 }
 
+// Find the rss feed url from a given url
 func FindRssFeedUrl(url string, c chan string) {
 	log.Printf("[-] Searching a RSS feed for %s", url)
 
 	result := ""
+	// If the url is empty, then do not fetch it
+	if url == "" {
+		c <- result
+		return
+	}
+
 	resp, err := http.Get(url)
 	if err != nil {
 		log.Fatalf("[x] Could not fetch content of %s. Reason: %s", url, err.Error())
@@ -41,7 +48,7 @@ func FindRssFeedUrl(url string, c chan string) {
 	}
 
 	// TODO: Improve the regexp so that http://www.wuxiaworld.com/cdindex-html does not return an incorrect result
-	re := regexp.MustCompile(`<link rel="alternate" type=\"application/(atom|rss)\+xml\" title=".+" href="(.+)" />`)
+	re := regexp.MustCompile(`<link rel="alternate" type=\"application/rss\+xml\" title=".+" href="(.+)" />`)
 	if !re.MatchString(string(body)) {
 		log.Printf("[-] No RSS feed found for %s", url)
 	} else {
@@ -58,9 +65,8 @@ func FindRssFeedUrl(url string, c chan string) {
 	c <- result
 }
 
+// Fetch the content of the url and unmarshal the body to a struct
 func ParseRssFeed(url string, c chan *RSS) {
-	log.Printf("[-] Parsing the RSS feed %s", url)
-
 	resp, err := http.Get(url)
 	if err != nil {
 		log.Fatalf("[x] Could not fetch content of %s. Reason: %s", url, err.Error())
@@ -76,6 +82,5 @@ func ParseRssFeed(url string, c chan *RSS) {
 	if err != nil {
 		log.Fatalf("[x] Error when trying to unmarshal the rss feed %s. Reason: %s", url, err.Error())
 	}
-	log.Printf("[-] Parsing of RSS feed of %s SUCCESS! Title of RSS feed was: %s", url, rss.Items.Title)
 	c <- &rss
 }

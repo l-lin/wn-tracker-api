@@ -2,7 +2,8 @@ package web
 
 import (
 	"github.com/l-lin/wn-tracker-api/novel"
-	"github.com/l-lin/wn-tracker-api/rss"
+	"github.com/l-lin/wn-tracker-api/notification"
+	"github.com/l-lin/wn-tracker-api/feed"
 	oauth2 "github.com/goincremental/negroni-oauth2"
 	"github.com/gorilla/mux"
 	"net/http"
@@ -27,22 +28,22 @@ func Novels(w http.ResponseWriter, r *http.Request) {
 
 func Novel(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	id := vars["id"]
+	novelId := vars["novelId"]
 
 	userC := make(chan string)
 	go GetUserId(r, userC)
 	userId := <- userC
 
-	n := novel.Get(id, userId)
-	if n != nil && n.Id != "" {
-		log.Printf("[-] Found the novel id %s", id)
+	n := novel.Get(novelId, userId)
+	if n != nil && n.NovelId != "" {
+		log.Printf("[-] Found the novel novelId %s", novelId)
 		write(w, http.StatusOK, n)
 		return
 	}
 
 	// If we didn't find it, 404
-	log.Printf("[-] Could not find the novel id %s", id)
-	write(w, http.StatusNotFound, JsonErr{Code: http.StatusNotFound, Text: fmt.Sprintf("Novel not Found for id %s", id)})
+	log.Printf("[-] Could not find the novel novelId %s", novelId)
+	write(w, http.StatusNotFound, JsonErr{Code: http.StatusNotFound, Text: fmt.Sprintf("Novel not Found for novelId %s", novelId)})
 }
 
 func SaveNovel(w http.ResponseWriter, r *http.Request)  {
@@ -63,7 +64,7 @@ func SaveNovel(w http.ResponseWriter, r *http.Request)  {
 	userC := make(chan string)
 	rssC := make(chan string)
 	go GetUserId(r, userC)
-	go rss.FindRssFeedUrl(n.Url, rssC)
+	go feed.FindRssFeedUrl(n.Url, rssC)
 	n.UserId = <- userC
 	n.FeedUrl = <- rssC
 
@@ -81,7 +82,7 @@ func SaveNovel(w http.ResponseWriter, r *http.Request)  {
 
 func UpdateNovel(w http.ResponseWriter, r *http.Request)  {
 	vars := mux.Vars(r)
-	id := vars["id"]
+	novelId := vars["novelId"]
 
 	var n novel.Novel
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -96,37 +97,37 @@ func UpdateNovel(w http.ResponseWriter, r *http.Request)  {
 		write(w, 422, JsonErr{Code: 422, Text: "Could not parse the given parameter"})
 		return
 	}
-	n.Id = id
+	n.NovelId = novelId
 
 	userC := make(chan string)
 	rssC := make(chan string)
 	go GetUserId(r, userC)
-	go rss.FindRssFeedUrl(n.Url, rssC)
+	go feed.FindRssFeedUrl(n.Url, rssC)
 	n.UserId = <- userC
 	n.FeedUrl = <- rssC
 
-	if !n.IsValid() || n.Id == "" {
+	if !n.IsValid() || n.NovelId == "" {
 		write(w, http.StatusPreconditionFailed, JsonErr{
 			Code: http.StatusPreconditionFailed, Text: "The given novel has incorrect attributes",
 		})
 		return
 	}
-	log.Printf("[-] Updating novel id %s", id)
+	log.Printf("[-] Updating novel novelId %s", novelId)
 	n.Update()
 	write(w, http.StatusOK, n)
 }
 
 func DeleteNovel(w http.ResponseWriter, r *http.Request)  {
 	vars := mux.Vars(r)
-	id := vars["id"]
+	novelId := vars["novelId"]
 	n := novel.New()
-	n.Id = id
+	n.NovelId = novelId
 
 	userC := make(chan string)
 	go GetUserId(r, userC)
 	n.UserId = <- userC
 
-	log.Printf("[-] Deleting novel id %s", id)
+	log.Printf("[-] Deleting novel novelId %s", novelId)
 	n.Delete()
 	write(w, http.StatusNoContent, nil)
 }
@@ -141,7 +142,11 @@ func Notification(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusUnauthorized)
 		fmt.Fprintf(w, "You are not authenticated!")
 	} else {
-		fmt.Fprintf(w, "You are authenticated!")
+		// Fetch the userId
+		userC := make(chan string)
+		go GetUserId(r, userC)
+		userId := <- userC
+		write(w, http.StatusOK, notification.GetList(userId))
 	}
 }
 

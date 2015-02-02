@@ -37,6 +37,11 @@
 			"Rev": "2ca26b30a7edcd0b0af72d372c93a2d9d9c2038a"
 		},
 		{
+			"ImportPath": "github.com/robfig/cron",
+			"Comment": "v1-2-g67823cd",
+			"Rev": "67823cd24dece1b04cced3a0a0b3ca2bc84d875e"
+		},
+		{
 			"ImportPath": "golang.org/x/net/context",
 			"Rev": "9dd48c277bcb2bb2cc3eb6a6368a486a567d3562"
 		},

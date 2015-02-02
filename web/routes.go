@@ -33,19 +33,19 @@ var routes = Routes{
 	Route{
 		"Novel",
 		"GET",
-		"/novels/{id}",
+		"/novels/{novelId}",
 		Novel,
 	},
 	Route{
 		"UpdateNovel",
 		"PUT",
-		"/novels/{id}",
+		"/novels/{novelId}",
 		UpdateNovel,
 	},
 	Route{
 		"DeleteNovel",
 		"DELETE",
-		"/novels/{id}",
+		"/novels/{novelId}",
 		DeleteNovel,
 	},
 }
