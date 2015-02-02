@@ -1,6 +1,6 @@
 CREATE EXTENSION "uuid-ossp";
 CREATE TABLE default_novels (
-  id        VARCHAR DEFAULT uuid_generate_v4(),
+  id        VARCHAR PRIMARY KEY DEFAULT uuid_generate_v4(),
   title     VARCHAR NOT NULL,
   url       VARCHAR NOT NULL,
   feed_url  VARCHAR,
@@ -290,13 +290,17 @@ VALUES (
 );
 
 CREATE TABLE novels (
-  id           VARCHAR   DEFAULT uuid_generate_v4(),
-  user_id      VARCHAR NOT NULL,
-  title        VARCHAR NOT NULL,
+  id        VARCHAR PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id   VARCHAR NOT NULL,
+  title     VARCHAR NOT NULL,
+  url       VARCHAR NOT NULL,
+  image_url VARCHAR,
+  summary   TEXT,
+  favorite  BOOL
+);
+
+CREATE TABLE feeds (
+  id           VARCHAR REFERENCES novels ON DELETE CASCADE,
   url          VARCHAR NOT NULL,
-  feed_url     VARCHAR,
-  image_url    VARCHAR,
-  summary      TEXT,
-  favorite     BOOL,
   last_updated TIMESTAMP DEFAULT now()
 );

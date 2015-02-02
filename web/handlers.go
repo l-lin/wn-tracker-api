@@ -3,6 +3,7 @@ package web
 import (
 	"github.com/l-lin/wn-tracker-api/novel"
 	"github.com/l-lin/wn-tracker-api/rss"
+	oauth2 "github.com/goincremental/negroni-oauth2"
 	"github.com/gorilla/mux"
 	"net/http"
 	"encoding/json"
@@ -132,6 +133,16 @@ func DeleteNovel(w http.ResponseWriter, r *http.Request)  {
 
 func SignIn(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "You are now authenticated! You can close this tab.")
+}
+
+func Notification(w http.ResponseWriter, r *http.Request) {
+	token := oauth2.GetToken(r)
+	if token == nil || !token.Valid() {
+		w.WriteHeader(http.StatusUnauthorized)
+		fmt.Fprintf(w, "You are not authenticated!")
+	} else {
+		fmt.Fprintf(w, "You are authenticated!")
+	}
 }
 
 func write(w http.ResponseWriter, status int, n interface {}) {

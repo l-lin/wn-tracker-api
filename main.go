@@ -18,7 +18,7 @@ func main() {
 
 	router := http.NewServeMux()
 	router.Handle("/", secure)
-	router.HandleFunc("/authTest", web.AuthTest)
+	router.HandleFunc("/notification", web.Notification)
 
 	app := negroni.New()
 	app.Use(sessions.Sessions("my_session", cookiestore.New([]byte("secret123"))))

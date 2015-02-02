@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"io/ioutil"
 	"encoding/json"
-	"fmt"
 )
 
 const googleUserInfoEndPoint = "https://www.googleapis.com/oauth2/v1/userinfo"
@@ -24,16 +23,6 @@ func NewOAuth() negroni.Handler {
 		RedirectURL:  	os.Getenv("GOOGLE_REDIRECT_URI"),
 		Scopes:       	[]string{"https://www.googleapis.com/auth/userinfo.profile"},
 	})
-}
-
-func AuthTest(w http.ResponseWriter, r *http.Request) {
-	token := oauth2.GetToken(r)
-	if token == nil || !token.Valid() {
-		w.WriteHeader(http.StatusUnauthorized)
-		fmt.Fprintf(w, "You are not authenticated!")
-	} else {
-		fmt.Fprintf(w, "You are authenticated!")
-	}
 }
 
 func GetUserId(r *http.Request, c chan string) {
