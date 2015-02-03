@@ -311,6 +311,5 @@ CREATE TABLE notifications (
   feed_id         VARCHAR REFERENCES feeds ON DELETE CASCADE,
   title           VARCHAR,
   link            VARCHAR,
-  description     VARCHAR,
   pub_date        TIMESTAMP
 );

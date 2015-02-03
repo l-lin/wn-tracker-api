@@ -12,7 +12,6 @@ type Notification struct {
 	FeedId         string `json:"feedId`
 	Title          string `json:"title"`
 	Link           string `json:"link"`
-	Description    string `json:"description"`
 	PubDate        time.Time `json:"-"`
 }
 
@@ -41,7 +40,7 @@ func GetList(userId string) []*Notification {
 	defer database.Close()
 
 	rows, err := database.Query(`
-		SELECT n.notification_id, n.feed_id, n.title, n.link, n.description, n.pub_date
+		SELECT n.notification_id, n.feed_id, n.title, n.link, n.pub_date
 		FROM notifications n
 		JOIN feeds f ON f.feed_id = n.feed_id
 		JOIN novels no ON no.novel_id = f.novel_id
@@ -65,7 +64,7 @@ func Get(notificationId string) *Notification {
 	defer database.Close()
 
 	row := database.QueryRow(`
-	SELECT n.notification_id, n.feed_id, n.title, n.link, n.description, n.pub_date
+	SELECT n.notification_id, n.feed_id, n.title, n.link, n.pub_date
 	FROM notifications n
 	WHERE n.notification_id = $1`,
 		notificationId)
@@ -80,7 +79,7 @@ func (n *Notification) Save() {
 	if err != nil {
 		log.Fatalf("[x] Could not start the transaction. Reason: %s", err.Error())
 	}
-	row := tx.QueryRow("INSERT INTO notifications (feed_id, title, link, description, pub_date) VALUES ($1, $2, $3, $4, $5) RETURNING notification_id",
+	row := tx.QueryRow("INSERT INTO notifications (feed_id, title, link, pub_date) VALUES ($1, $2, $3, $4) RETURNING notification_id",
 		n.FeedId, n.Title, n.Link, n.Description, n.PubDate)
 	var lastId string
 	if err := row.Scan(&lastId); err != nil {
@@ -119,7 +118,6 @@ func toNotification(rows db.RowMapper) *Notification {
 		&notification.FeedId,
 		&notification.Title,
 		&notification.Link,
-		&notification.Description,
 		&notification.PubDate,
 	)
 	if err != nil {
