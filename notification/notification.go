@@ -80,7 +80,7 @@ func (n *Notification) Save() {
 		log.Fatalf("[x] Could not start the transaction. Reason: %s", err.Error())
 	}
 	row := tx.QueryRow("INSERT INTO notifications (feed_id, title, link, pub_date) VALUES ($1, $2, $3, $4) RETURNING notification_id",
-		n.FeedId, n.Title, n.Link, n.Description, n.PubDate)
+		n.FeedId, n.Title, n.Link, n.PubDate)
 	var lastId string
 	if err := row.Scan(&lastId); err != nil {
 		tx.Rollback()
