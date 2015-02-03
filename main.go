@@ -9,21 +9,22 @@ import (
 	"github.com/goincremental/negroni-sessions/cookiestore"
 	"os"
 	"log"
-	"net/http"
 )
 
 func main() {
-	secure := negroni.Classic()
+	secure := negroni.New()
 	secure.Use(oauth2.LoginRequired())
-	secure.UseHandler(web.NewRouter())
+	secure.UseHandler(web.NewSignInRouter())
 
-	router := http.NewServeMux()
-	router.Handle("/", secure)
-	router.HandleFunc("/notification", web.Notification)
+	// Only redirect to Google login page for path /signin
+	router := web.NewRouter()
+	router.Handle("/signin", secure)
 
-	feed.NewCronRss()
+	// Start the cron to fetch the notifications from the RSS feeds
+	feed.NewCronRss().Start()
 
-	app := negroni.New()
+	// Start the app
+	app := negroni.Classic()
 	app.Use(sessions.Sessions("my_session", cookiestore.New([]byte("secret123"))))
 	app.Use(web.NewOAuth())
 	app.UseHandler(router)

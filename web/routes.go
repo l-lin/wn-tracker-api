@@ -13,12 +13,6 @@ type Routes []Route
 
 var routes = Routes{
 	Route{
-		"SignIn",
-		"GET",
-		"/signin",
-		SignIn,
-	},
-	Route{
 		"Novels",
 		"GET",
 		"/novels",
@@ -47,5 +41,11 @@ var routes = Routes{
 		"DELETE",
 		"/novels/{novelId}",
 		DeleteNovel,
+	},
+	Route{
+		"Notifications",
+		"GET",
+		"/notifications",
+		Notifications,
 	},
 }

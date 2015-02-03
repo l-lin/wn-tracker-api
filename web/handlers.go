@@ -4,7 +4,6 @@ import (
 	"github.com/l-lin/wn-tracker-api/novel"
 	"github.com/l-lin/wn-tracker-api/notification"
 	"github.com/l-lin/wn-tracker-api/feed"
-	oauth2 "github.com/goincremental/negroni-oauth2"
 	"github.com/gorilla/mux"
 	"net/http"
 	"encoding/json"
@@ -136,18 +135,11 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "You are now authenticated! You can close this tab.")
 }
 
-func Notification(w http.ResponseWriter, r *http.Request) {
-	token := oauth2.GetToken(r)
-	if token == nil || !token.Valid() {
-		w.WriteHeader(http.StatusUnauthorized)
-		fmt.Fprintf(w, "You are not authenticated!")
-	} else {
-		// Fetch the userId
-		userC := make(chan string)
-		go GetUserId(r, userC)
-		userId := <- userC
-		write(w, http.StatusOK, notification.GetList(userId))
-	}
+func Notifications(w http.ResponseWriter, r *http.Request) {
+	userC := make(chan string)
+	go GetUserId(r, userC)
+	userId := <- userC
+	write(w, http.StatusOK, notification.GetList(userId))
 }
 
 func write(w http.ResponseWriter, status int, n interface {}) {

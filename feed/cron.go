@@ -8,10 +8,10 @@ import (
 )
 
 // Cron to fetch all the rss content
-func NewCronRss() {
+func NewCronRss() *cron.Cron {
 	c := cron.New()
 	c.AddFunc("0 */5 * * * *", fillNotifications)
-	c.Start()
+	return c
 }
 
 func fillNotifications() {
@@ -65,6 +65,7 @@ func getNotifications(feeds []*Feed, c chan []notification.Notification) {
 					Title: item.Title,
 					Link: item.Link,
 					PubDate: pubDate,
+					Description: item.Description,
 				})
 		}
 	}
