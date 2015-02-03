@@ -9,6 +9,7 @@ import (
 	//	"time"
 )
 
+// The RSS representation
 type RSS struct {
 	XMLName xml.Name `xml:"rss"`
 	Items   Items `xml:"channel"`

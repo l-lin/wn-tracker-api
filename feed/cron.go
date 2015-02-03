@@ -40,6 +40,7 @@ func fillNotifications() {
 func getNotifications(feeds []*Feed, c chan []notification.Notification) {
 	notifications := make([]notification.Notification, 0)
 	for _, f := range feeds {
+		defer updateFeed(f)
 		if f.FeedUrl == "" {
 			continue
 		}
@@ -70,4 +71,10 @@ func getNotifications(feeds []*Feed, c chan []notification.Notification) {
 		}
 	}
 	c <- notifications
+}
+
+// Update the feed after fetching the rss feeds
+func updateFeed(f *Feed) {
+	f.LastUpdated = time.Now()
+	f.Update()
 }

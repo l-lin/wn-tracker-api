@@ -12,10 +12,12 @@ import (
 
 const googleUserInfoEndPoint = "https://www.googleapis.com/oauth2/v1/userinfo"
 
+// The user info for Google account
 type UserInfo struct {
 	Id string
 }
 
+// Returns a new Negroni middleware using Google OAuth2
 func NewOAuth() negroni.Handler {
 	return oauth2.Google(&oauth2.Config{
 		ClientID: 		os.Getenv("GOOGLE_CLIENT_ID"),
@@ -25,6 +27,8 @@ func NewOAuth() negroni.Handler {
 	})
 }
 
+// Get the user ID from a given token.
+// It will make a GET request to https://www.googleapis.com/oauth2/v1/userinfo?access_token=...
 func GetUserId(r *http.Request, c chan string) {
 	token := oauth2.GetToken(r)
 	if token == nil || !token.Valid() {

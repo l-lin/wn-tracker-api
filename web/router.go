@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 )
 
+// Returns the routers for novels, feeds and notifications
 func NewRouter() *mux.Router {
 	router := mux.NewRouter().StrictSlash(true)
 	router.Headers("Content-Type", "application/json", "X-Requested-With", "XMLHttpRequest")
@@ -17,12 +18,13 @@ func NewRouter() *mux.Router {
 		Methods(route.Method).
 		Path(route.Pattern).
 		Name(route.Name).
-		Handler(wrapWithCheckAuth(&route.HandlerFunc))
+		Handler(wrapWithCheckAuth(route.HandlerFunc))
 	}
 
 	return router
 }
 
+// Returns a router for signing in Google account
 func NewSignInRouter() *mux.Router {
 	router := mux.NewRouter().StrictSlash(true)
 	router.Headers("Content-Type", "application/json", "X-Requested-With", "XMLHttpRequest")
@@ -39,7 +41,8 @@ func NewSignInRouter() *mux.Router {
 	return router
 }
 
-func wrapWithCheckAuth(handlerFunc *http.HandlerFunc) http.HandlerFunc {
+// Wrap the HandlerFunc by checking if the user is indeed authenticated
+func wrapWithCheckAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
 	return func (w http.ResponseWriter, r *http.Request) {
 		token := oauth2.GetToken(r)
 		if token == nil || !token.Valid() {

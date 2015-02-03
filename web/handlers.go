@@ -13,6 +13,7 @@ import (
 	"io/ioutil"
 )
 
+// Handler to fetch the list of novels
 func Novels(w http.ResponseWriter, r *http.Request) {
 	userC := make(chan string)
 	go GetUserId(r, userC)
@@ -25,6 +26,7 @@ func Novels(w http.ResponseWriter, r *http.Request) {
 	write(w, http.StatusOK, novel.GetList(userId))
 }
 
+// Handler to fetch a novel
 func Novel(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	novelId := vars["novelId"]
@@ -45,6 +47,7 @@ func Novel(w http.ResponseWriter, r *http.Request) {
 	write(w, http.StatusNotFound, JsonErr{Code: http.StatusNotFound, Text: fmt.Sprintf("Novel not Found for novelId %s", novelId)})
 }
 
+// Handler to save a novel
 func SaveNovel(w http.ResponseWriter, r *http.Request)  {
 	var n novel.Novel
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -79,6 +82,7 @@ func SaveNovel(w http.ResponseWriter, r *http.Request)  {
 	write(w, http.StatusCreated, n)
 }
 
+// Handler to update a novel
 func UpdateNovel(w http.ResponseWriter, r *http.Request)  {
 	vars := mux.Vars(r)
 	novelId := vars["novelId"]
@@ -116,6 +120,7 @@ func UpdateNovel(w http.ResponseWriter, r *http.Request)  {
 	write(w, http.StatusOK, n)
 }
 
+// Handler to delete a novel
 func DeleteNovel(w http.ResponseWriter, r *http.Request)  {
 	vars := mux.Vars(r)
 	novelId := vars["novelId"]
@@ -131,10 +136,12 @@ func DeleteNovel(w http.ResponseWriter, r *http.Request)  {
 	write(w, http.StatusNoContent, nil)
 }
 
+// Handler to sign in Google account
 func SignIn(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "You are now authenticated! You can close this tab.")
 }
 
+// Handler to fetch the list of notifications
 func Notifications(w http.ResponseWriter, r *http.Request) {
 	userC := make(chan string)
 	go GetUserId(r, userC)
@@ -142,6 +149,36 @@ func Notifications(w http.ResponseWriter, r *http.Request) {
 	write(w, http.StatusOK, notification.GetList(userId))
 }
 
+// Handler to fetch a notification
+func Notification(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	notificationId := vars["notificationId"]
+
+	n := notification.Get(notificationId)
+	if n != nil && n.NotificationId != "" {
+		log.Printf("[-] Found the notification id %s", notificationId)
+		write(w, http.StatusOK, n)
+		return
+	}
+
+	// If we didn't find it, 404
+	log.Printf("[-] Could not find the notification id %s", notificationId)
+	write(w, http.StatusNotFound, JsonErr{Code: http.StatusNotFound, Text: fmt.Sprintf("Notification not Found for notificationId %s", notificationId)})
+}
+
+// Handler to delete a notification
+func DeleteNotification(w http.ResponseWriter, r *http.Request)  {
+	vars := mux.Vars(r)
+	notificationId := vars["notificationId"]
+	n := notification.New()
+	n.NotificationId = notificationId
+
+	log.Printf("[-] Deleting notification id %s", notificationId)
+	n.Delete()
+	write(w, http.StatusNoContent, nil)
+}
+
+// Write the response in JSON Content-type
 func write(w http.ResponseWriter, status int, n interface {}) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(status)

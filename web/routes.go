@@ -11,6 +11,7 @@ type Route struct {
 
 type Routes []Route
 
+// Availables routes
 var routes = Routes{
 	Route{
 		"Novels",
@@ -47,5 +48,17 @@ var routes = Routes{
 		"GET",
 		"/notifications",
 		Notifications,
+	},
+	Route{
+		"Notification",
+		"GET",
+		"/notifications/{notificationId}",
+		Notification,
+	},
+	Route{
+		"DeleteNotification",
+		"DELETE",
+		"/notifications/{notificationId}",
+		DeleteNotification,
 	},
 }

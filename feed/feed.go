@@ -38,6 +38,25 @@ func GetList() []*Feed {
 	return feeds
 }
 
+// Update the feed
+func (f *Feed) Update() {
+	database := db.Connect()
+	defer database.Close()
+	tx, err := database.Begin()
+	if err != nil {
+		log.Fatalf("[x] Could not start the transaction. Reason: %s", err.Error())
+	}
+	_, err = tx.Exec("UPDATE feeds SET last_updated = $1 WHERE feed_id = $2", f.LastUpdated, f.FeedId)
+	if err != nil {
+		tx.Rollback()
+		log.Fatalf("[x] Could not update the feed. Reason: %s", err.Error())
+	}
+
+	if err := tx.Commit(); err != nil {
+		log.Fatalf("[x] Could not commit the transaction. Reason: %s", err.Error())
+	}
+}
+
 // Fetch the content of the rows and build a new default feed
 func toFeed(rows db.RowMapper) *Feed {
 	feed := New()

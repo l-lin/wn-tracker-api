@@ -59,7 +59,20 @@ func GetList(userId string) []*Notification {
 	return feeds
 }
 
-// Save the novel in the database
+// Get the notification from a given id
+func Get(notificationId string) *Notification {
+	database := db.Connect()
+	defer database.Close()
+
+	row := database.QueryRow(`
+	SELECT n.notification_id, n.feed_id, n.title, n.link, n.description, n.pub_date
+	FROM notifications n
+	WHERE n.notification_id = $1`,
+		notificationId)
+	return toNotification(row)
+}
+
+// Save the notification in the database
 func (n *Notification) Save() {
 	database := db.Connect()
 	defer database.Close()
@@ -88,7 +101,7 @@ func (n *Notification) Delete() {
 	if err != nil {
 		log.Fatalf("[x] Could not start the transaction. Reason: %s", err.Error())
 	}
-	_, err = tx.Exec("DELETE FROM notification WHERE novel_id = $1", n.NotificationId)
+	_, err = tx.Exec("DELETE FROM notifications WHERE notification_id = $1", n.NotificationId)
 	if err != nil {
 		tx.Rollback()
 		log.Fatalf("[x] Could not delete the notification. Reason: %s", err.Error())
