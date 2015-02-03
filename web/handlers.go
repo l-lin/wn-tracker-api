@@ -178,6 +178,11 @@ func DeleteNotification(w http.ResponseWriter, r *http.Request)  {
 	write(w, http.StatusNoContent, nil)
 }
 
+// This Handler is used only to check if the user is indeed authenticated
+func AuthTest(w http.ResponseWriter, r *http.Request)  {
+	fmt.Fprintf(w, "You are now authenticated! You can close this tab.")
+}
+
 // Write the response in JSON Content-type
 func write(w http.ResponseWriter, status int, n interface {}) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")

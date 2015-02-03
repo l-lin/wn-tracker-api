@@ -61,4 +61,10 @@ var routes = Routes{
 		"/notifications/{notificationId}",
 		DeleteNotification,
 	},
+	Route{
+		"AuthTest",
+		"GET",
+		"/authTest",
+		AuthTest,
+	},
 }
