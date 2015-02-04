@@ -27,13 +27,14 @@ func GetList() []*Feed {
 
 	rows, err := database.Query("SELECT f.feed_id, f.feed_url, f.last_updated FROM feeds f")
 	if err != nil {
-		log.Fatalf("[x] Error when getting the list of feeds. Reason: %s", err.Error())
+		log.Printf("[x] Error when getting the list of feeds. Reason: %s", err.Error())
+		return feeds
 	}
 	for rows.Next() {
 		feeds = append(feeds, toFeed(rows))
 	}
 	if err := rows.Err(); err != nil {
-		log.Fatalf("[x] Error when getting the list of feeds. Reason: %s", err.Error())
+		log.Printf("[x] Error when getting the list of feeds. Reason: %s", err.Error())
 	}
 	return feeds
 }
@@ -49,11 +50,11 @@ func (f *Feed) Update() {
 	_, err = tx.Exec("UPDATE feeds SET last_updated = $1 WHERE feed_id = $2", f.LastUpdated, f.FeedId)
 	if err != nil {
 		tx.Rollback()
-		log.Fatalf("[x] Could not update the feed. Reason: %s", err.Error())
+		log.Printf("[x] Could not update the feed. Reason: %s", err.Error())
 	}
 
 	if err := tx.Commit(); err != nil {
-		log.Fatalf("[x] Could not commit the transaction. Reason: %s", err.Error())
+		log.Printf("[x] Could not commit the transaction. Reason: %s", err.Error())
 	}
 }
 

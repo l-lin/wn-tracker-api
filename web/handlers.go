@@ -52,10 +52,14 @@ func SaveNovel(w http.ResponseWriter, r *http.Request)  {
 	var n novel.Novel
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
-		log.Fatalf("[x] Could not read the body. Reason: %s", err.Error())
+		log.Printf("[x] Could not read the body. Reason: %s", err.Error())
+		write(w, http.StatusInternalServerError, JsonErr{Code: http.StatusInternalServerError, Text: "Could not read the body."})
+		return
 	}
 	if err := r.Body.Close(); err != nil {
-		log.Fatalf("[x] Could not close ready the body. Reason: %s", err.Error())
+		log.Printf("[x] Could not close ready the body. Reason: %s", err.Error())
+		write(w, http.StatusInternalServerError, JsonErr{Code: http.StatusInternalServerError, Text: "Could not close the body."})
+		return
 	}
 	if err := json.Unmarshal(body, &n); err != nil {
 		// 422: unprocessable entity

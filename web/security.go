@@ -40,17 +40,23 @@ func GetUserId(r *http.Request, c chan string) {
 	endPoint := googleUserInfoEndPoint + "?access_token=" + accessToken
 	resp, err := http.Get(endPoint)
 	if err != nil {
-		log.Fatalf("[x] Could not find the user info with token %s. Reason: %s", accessToken, err.Error())
+		log.Printf("[x] Could not find the user info with token %s. Reason: %s", accessToken, err.Error())
+		c <- ""
+		return
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatalf("[x] Error reading content of %s. Reson: %s", endPoint, err.Error())
+		log.Printf("[x] Error reading content of %s. Reson: %s", endPoint, err.Error())
+		c <- ""
+		return
 	}
 	var userInfo UserInfo
 	err = json.Unmarshal(body, &userInfo)
 	if err != nil {
-		log.Fatalf("[x] Could not unmarshal the user info. Reason: %s", err.Error())
+		log.Printf("[x] Could not unmarshal the user info. Reason: %s", err.Error())
+		c <- ""
+		return
 	}
 	c <- userInfo.Id
 }

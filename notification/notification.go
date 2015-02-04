@@ -28,7 +28,7 @@ func Exists(feedId, link string) bool {
 	row := database.QueryRow("SELECT CASE WHEN EXISTS(SELECT 1 FROM notifications WHERE feed_id = $1 AND link = $2) THEN 1 ELSE 0 END", feedId, link)
 	var exists int64
 	if err := row.Scan(&exists); err != nil {
-		log.Fatalf("[x] Could not check if there is existing notifications for feedId '%s' and link '%s'. Reason: %s", feedId, link, err.Error())
+		log.Printf("[x] Could not check if there is existing notifications for feedId '%s' and link '%s'. Reason: %s", feedId, link, err.Error())
 	}
 	return exists == 1;
 }
@@ -47,13 +47,14 @@ func GetList(userId string) []*Notification {
 		WHERE no.user_id = $1
 	`, userId)
 	if err != nil {
-		log.Fatalf("[x] Error when getting the list of feeds. Reason: %s", err.Error())
+		log.Printf("[x] Error when getting the list of feeds. Reason: %s", err.Error())
+		return feeds
 	}
 	for rows.Next() {
 		feeds = append(feeds, toNotification(rows))
 	}
 	if err := rows.Err(); err != nil {
-		log.Fatalf("[x] Error when getting the list of feeds. Reason: %s", err.Error())
+		log.Printf("[x] Error when getting the list of feeds. Reason: %s", err.Error())
 	}
 	return feeds
 }
@@ -84,11 +85,11 @@ func (n *Notification) Save() {
 	var lastId string
 	if err := row.Scan(&lastId); err != nil {
 		tx.Rollback()
-		log.Fatalf("[x] Could not fetch the novel_id of the newly created novel. Reason: %s", err.Error())
+		log.Printf("[x] Could not fetch the novel_id of the newly created novel. Reason: %s", err.Error())
 	}
 	n.NotificationId = lastId
 	if err := tx.Commit(); err != nil {
-		log.Fatalf("[x] Could not commit the transaction. Reason: %s", err.Error())
+		log.Printf("[x] Could not commit the transaction. Reason: %s", err.Error())
 	}
 }
 
@@ -103,10 +104,10 @@ func (n *Notification) Delete() {
 	_, err = tx.Exec("DELETE FROM notifications WHERE notification_id = $1", n.NotificationId)
 	if err != nil {
 		tx.Rollback()
-		log.Fatalf("[x] Could not delete the notification. Reason: %s", err.Error())
+		log.Printf("[x] Could not delete the notification. Reason: %s", err.Error())
 	}
 	if err := tx.Commit(); err != nil {
-		log.Fatalf("[x] Could not commit the transaction. Reason: %s", err.Error())
+		log.Printf("[x] Could not commit the transaction. Reason: %s", err.Error())
 	}
 }
 

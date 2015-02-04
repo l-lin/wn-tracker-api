@@ -32,7 +32,7 @@ func Exists(userId string) bool {
 	row := database.QueryRow("SELECT CASE WHEN EXISTS(SELECT 1 FROM novels WHERE user_id = $1) THEN 1 ELSE 0 END", userId)
 	var exists int64
 	if err := row.Scan(&exists); err != nil {
-		log.Fatalf("[x] Could not check if there is existing novels for user '%s'. Reason: %s", userId, err.Error())
+		log.Printf("[x] Could not check if there is existing novels for user '%s'. Reason: %s", userId, err.Error())
 	}
 	return exists == 1;
 }
@@ -48,15 +48,15 @@ func CopyDefaultFor(userId string) {
 	_, err = tx.Exec("INSERT INTO novels (user_id, title, url, image_url, summary, favorite) SELECT $1, title, url, image_url, summary, favorite FROM default_novels", userId)
 	if err != nil {
 		tx.Rollback()
-		log.Fatalf("[x] Could not copy the default novels. Reason: %s", err.Error())
+		log.Printf("[x] Could not copy the default novels. Reason: %s", err.Error())
 	}
 	_, err = tx.Exec("INSERT INTO feeds (novel_id, feed_url) SELECT n.novel_id, dn.feed_url FROM novels n JOIN default_novels dn ON dn.url = n.url WHERE user_id = $1", userId)
 	if err != nil {
 		tx.Rollback()
-		log.Fatalf("[x] Could not copy the default feeds. Reason: %s", err.Error())
+		log.Printf("[x] Could not copy the default feeds. Reason: %s", err.Error())
 	}
 	if err := tx.Commit(); err != nil {
-		log.Fatalf("[x] Could not commit the transaction. Reason: %s", err.Error())
+		log.Printf("[x] Could not commit the transaction. Reason: %s", err.Error())
 	}
 }
 
@@ -87,7 +87,8 @@ func GetList(userId string) []*Novel {
 	WHERE n.user_id = $1`,
 		userId)
 	if err != nil {
-		log.Fatalf("[x] Error when getting the list of novels. Reason: %s", err.Error())
+		log.Printf("[x] Error when getting the list of novels. Reason: %s", err.Error())
+		return novels
 	}
 	for rows.Next() {
 		n := toNovel(rows)
@@ -96,7 +97,7 @@ func GetList(userId string) []*Novel {
 		}
 	}
 	if err := rows.Err(); err != nil {
-		log.Fatalf("[x] Error when getting the list of novels. Reason: %s", err.Error())
+		log.Printf("[x] Error when getting the list of novels. Reason: %s", err.Error())
 	}
 	return novels
 }
@@ -143,12 +144,12 @@ func (n *Novel) Update() {
 		n.Title, n.Url, n.ImageUrl, n.Summary, n.Favorite, n.NovelId, n.UserId)
 	if err != nil {
 		tx.Rollback()
-		log.Fatalf("[x] Could not update the novel. Reason: %s", err.Error())
+		log.Printf("[x] Could not update the novel. Reason: %s", err.Error())
 	}
 	_, err = tx.Exec("UPDATE feeds SET feed_url = $1 WHERE novel_id = $2", n.FeedUrl, n.NovelId)
 	if err != nil {
 		tx.Rollback()
-		log.Fatalf("[x] Could not update the feeds. Reason: %s", err.Error())
+		log.Printf("[x] Could not update the feeds. Reason: %s", err.Error())
 	}
 
 	if err := tx.Commit(); err != nil {

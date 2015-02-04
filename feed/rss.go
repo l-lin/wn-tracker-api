@@ -39,12 +39,16 @@ func FindRssFeedUrl(url string, c chan string) {
 
 	resp, err := http.Get(url)
 	if err != nil {
-		log.Fatalf("[x] Could not fetch content of %s. Reason: %s", url, err.Error())
+		log.Printf("[x] Could not fetch content of %s. Reason: %s", url, err.Error())
+		c <- result
+		return
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatalf("[x] Error reading content of %s. Reason: %s", url, err.Error())
+		log.Printf("[x] Error reading content of %s. Reason: %s", url, err.Error())
+		c <- result
+		return
 	}
 
 	// TODO: Improve the regexp so that http://www.wuxiaworld.com/cdindex-html does not return an incorrect result
@@ -69,18 +73,22 @@ func FindRssFeedUrl(url string, c chan string) {
 func ParseRssFeed(url string, c chan *RSS) {
 	resp, err := http.Get(url)
 	if err != nil {
-		log.Fatalf("[x] Could not fetch content of %s. Reason: %s", url, err.Error())
+		log.Printf("[x] Could not fetch content of %s. Reason: %s", url, err.Error())
+		c <- &RSS{}
+		return
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatalf("[x] Error reading content of %s. Reason: %s", url, err.Error())
+		log.Printf("[x] Error reading content of %s. Reason: %s", url, err.Error())
+		c <- &RSS{}
+		return
 	}
 
 	var rss RSS
 	err = xml.Unmarshal(body, &rss)
 	if err != nil {
-		log.Fatalf("[x] Error when trying to unmarshal the rss feed %s. Reason: %s", url, err.Error())
+		log.Printf("[x] Error when trying to unmarshal the rss feed %s. Reason: %s", url, err.Error())
 	}
 	c <- &rss
 }
