@@ -8,8 +8,8 @@ import (
 )
 
 type Notification struct {
-	NotificationId string `json:"notificationId`
-	FeedId         string `json:"feedId`
+	NotificationId string `json:"notificationId"`
+	FeedId         string `json:"feedId"`
 	Title          string `json:"title"`
 	Link           string `json:"link"`
 	PubDate        time.Time `json:"-"`
