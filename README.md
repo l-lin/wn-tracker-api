@@ -22,7 +22,7 @@ You need to set the following environment variables in the `startup.sh`:
 |GOOGLE_CLIENT_SECRET   |The client secret of your Google API   |ABCDEFGHIJKLMOPQRSTUVWXYZ              |
 |GOOGLE_REDIRECT_URL    |The redirect URL after being connected |http://localhost:3000/oauth2callback   |
 
-Thoses variables are available in your [Google developer console](https://console.developers.google.com/project).
+Those variables are available in your [Google developer console](https://console.developers.google.com/project).
 
 After the configuration, you just need to execute `startup.sh` and access to `http://localhost:3000/`
 
