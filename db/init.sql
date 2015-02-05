@@ -313,3 +313,8 @@ CREATE TABLE notifications (
   link            VARCHAR,
   pub_date        TIMESTAMP
 );
+
+CREATE TABLE tokens (
+  user_id       VARCHAR NOT NULL PRIMARY KEY,
+  refresh_token VARCHAR NOT NULL
+);

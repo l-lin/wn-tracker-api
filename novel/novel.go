@@ -43,7 +43,7 @@ func CopyDefaultFor(userId string) {
 	defer database.Close()
 	tx, err := database.Begin()
 	if err != nil {
-		log.Fatalf("[x] Could not start the transaction. Reason: %s", err.Error())
+		log.Printf("[x] Could not start the transaction. Reason: %s", err.Error())
 	}
 	_, err = tx.Exec("INSERT INTO novels (user_id, title, url, image_url, summary, favorite) SELECT $1, title, url, image_url, summary, favorite FROM default_novels", userId)
 	if err != nil {
@@ -108,25 +108,25 @@ func (n *Novel) Save() {
 	defer database.Close()
 	tx, err := database.Begin()
 	if err != nil {
-		log.Fatalf("[x] Could not start the transaction. Reason: %s", err.Error())
+		log.Printf("[x] Could not start the transaction. Reason: %s", err.Error())
 	}
 	row := tx.QueryRow("INSERT INTO novels (user_id, title, url, image_url, summary, favorite) VALUES ($1, $2, $3, $4, $5, $6) RETURNING novel_id",
 		n.UserId, n.Title, n.Url, n.ImageUrl, n.Summary, n.Favorite)
 	var lastId string
 	if err := row.Scan(&lastId); err != nil {
 		tx.Rollback()
-		log.Fatalf("[x] Could not fetch the novel_id of the newly created novel. Reason: %s", err.Error())
+		log.Printf("[x] Could not fetch the novel_id of the newly created novel. Reason: %s", err.Error())
 	}
 	n.NovelId = lastId
 	row = tx.QueryRow("INSERT INTO feeds (novel_id, feed_url) VALUES ($1, $2) RETURNING feed_id", n.NovelId, n.FeedUrl)
 	var feedId string
 	if err := row.Scan(&feedId); err != nil {
 		tx.Rollback()
-		log.Fatalf("[x] Could not create the feeds. Reason: %s", err.Error())
+		log.Printf("[x] Could not create the feeds. Reason: %s", err.Error())
 	}
 	n.FeedId = feedId
 	if err := tx.Commit(); err != nil {
-		log.Fatalf("[x] Could not commit the transaction. Reason: %s", err.Error())
+		log.Printf("[x] Could not commit the transaction. Reason: %s", err.Error())
 	}
 }
 
@@ -136,7 +136,7 @@ func (n *Novel) Update() {
 	defer database.Close()
 	tx, err := database.Begin()
 	if err != nil {
-		log.Fatalf("[x] Could not start the transaction. Reason: %s", err.Error())
+		log.Printf("[x] Could not start the transaction. Reason: %s", err.Error())
 	}
 	_, err = tx.Exec(`
 	UPDATE novels SET title = $1, url = $2, image_url = $3, summary = $4, favorite = $5
@@ -153,7 +153,7 @@ func (n *Novel) Update() {
 	}
 
 	if err := tx.Commit(); err != nil {
-		log.Fatalf("[x] Could not commit the transaction. Reason: %s", err.Error())
+		log.Printf("[x] Could not commit the transaction. Reason: %s", err.Error())
 	}
 }
 
@@ -163,15 +163,15 @@ func (n *Novel) Delete() {
 	defer database.Close()
 	tx, err := database.Begin()
 	if err != nil {
-		log.Fatalf("[x] Could not start the transaction. Reason: %s", err.Error())
+		log.Printf("[x] Could not start the transaction. Reason: %s", err.Error())
 	}
 	_, err = tx.Exec("DELETE FROM novels WHERE novel_id = $1 AND user_id = $2", n.NovelId, n.UserId)
 	if err != nil {
 		tx.Rollback()
-		log.Fatalf("[x] Could not delete the novel. Reason: %s", err.Error())
+		log.Printf("[x] Could not delete the novel. Reason: %s", err.Error())
 	}
 	if err := tx.Commit(); err != nil {
-		log.Fatalf("[x] Could not commit the transaction. Reason: %s", err.Error())
+		log.Printf("[x] Could not commit the transaction. Reason: %s", err.Error())
 	}
 }
 

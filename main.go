@@ -25,7 +25,7 @@ func main() {
 
 	// Start the app
 	app := negroni.Classic()
-	app.Use(sessions.Sessions("my_session", cookiestore.New([]byte("secret123"))))
+	app.Use(sessions.Sessions("wn_tracker", cookiestore.New([]byte(os.Getenv("SESSION_SECRET")))))
 	app.Use(web.NewOAuth())
 	app.UseHandler(router)
 	app.Run(port())
