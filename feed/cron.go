@@ -57,7 +57,11 @@ func getNotifications(feeds []*Feed, c chan []notification.Notification) {
 
 		hasNews := false
 		for _, item := range rss.Items.ItemList {
-			pubDate, _ := time.Parse(time.RFC1123Z, item.PubDate)
+			pubDate, err := time.Parse(time.RFC1123Z, item.PubDate)
+			if err != nil {
+				log.Printf("[x] Cannot read the pub date from feed URL %s", f.FeedUrl)
+				break;
+			}
 			if pubDate.Before(f.LastUpdated) {
 				break;
 			}
@@ -70,7 +74,7 @@ func getNotifications(feeds []*Feed, c chan []notification.Notification) {
 			hasNews = true
 		}
 		if hasNews {
-			f.LastUpdated = lastBuildDate
+			f.LastUpdated = time.Now()
 			defer f.Update()
 		}
 	}
