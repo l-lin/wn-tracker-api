@@ -140,6 +140,22 @@ func DeleteNovel(w http.ResponseWriter, r *http.Request)  {
 	write(w, http.StatusNoContent, nil)
 }
 
+// Handler to search novels
+func SearchNovels(w http.ResponseWriter, r *http.Request) {
+	userC := make(chan string)
+	go GetUserId(r, userC)
+	userId := <- userC
+	if !novel.Exists(userId) {
+		log.Printf("[-] No novels found for user %s. Copy the default one...", userId)
+		novel.CopyDefaultFor(userId)
+	}
+
+	query := r.URL.Query()
+	title := query["title"][0]
+
+	write(w, http.StatusOK, novel.Search(userId, title))
+}
+
 // Handler to sign in Google account
 func SignIn(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "You are now authenticated! You can close this tab.")

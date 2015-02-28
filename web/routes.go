@@ -26,6 +26,12 @@ var routes = Routes{
 		SaveNovel,
 	},
 	Route{
+		"SearchNovels",
+		"GET",
+		"/novels/search/",
+		SearchNovels,
+	},
+	Route{
 		"Novel",
 		"GET",
 		"/novels/{novelId}",

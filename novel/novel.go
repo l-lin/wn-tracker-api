@@ -102,6 +102,34 @@ func GetList(userId string) []*Novel {
 	return novels
 }
 
+// Search the list of novels given a string
+func Search(userId, title string) []*Novel {
+	novels := make([]*Novel, 0)
+	database := db.Connect()
+	defer database.Close()
+
+	rows, err := database.Query(`
+	SELECT n.novel_id, n.user_id, n.title, n.url, n.image_url, n.summary, n.favorite, f.feed_url, f.last_updated
+	FROM novels n
+	 JOIN feeds f on f.novel_id = n.novel_id
+	WHERE n.user_id = $1 AND n.title ILIKE $2`,
+		userId, "%" + title + "%")
+	if err != nil {
+		log.Printf("[x] Error when getting the list of novels. Reason: %s", err.Error())
+		return novels
+	}
+	for rows.Next() {
+		n := toNovel(rows)
+		if n.IsValid() {
+			novels = append(novels, n)
+		}
+	}
+	if err := rows.Err(); err != nil {
+		log.Printf("[x] Error when getting the list of novels. Reason: %s", err.Error())
+	}
+	return novels
+}
+
 // Save the novel in the database
 func (n *Novel) Save() {
 	database := db.Connect()

@@ -35,7 +35,7 @@ func Exists(feedId, link string) bool {
 
 // Fetch all notifications from the db
 func GetList(userId string) []*Notification {
-	feeds := make([]*Notification, 0)
+	notifications := make([]*Notification, 0)
 	database := db.Connect()
 	defer database.Close()
 
@@ -48,15 +48,15 @@ func GetList(userId string) []*Notification {
 	`, userId)
 	if err != nil {
 		log.Printf("[x] Error when getting the list of feeds. Reason: %s", err.Error())
-		return feeds
+		return notifications
 	}
 	for rows.Next() {
-		feeds = append(feeds, toNotification(rows))
+		notifications = append(notifications, toNotification(rows))
 	}
 	if err := rows.Err(); err != nil {
 		log.Printf("[x] Error when getting the list of feeds. Reason: %s", err.Error())
 	}
-	return feeds
+	return notifications
 }
 
 // Get the notification from a given id
