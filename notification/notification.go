@@ -45,6 +45,7 @@ func GetList(userId string) []*Notification {
 		JOIN feeds f ON f.feed_id = n.feed_id
 		JOIN novels no ON no.novel_id = f.novel_id
 		WHERE no.user_id = $1
+		ORDER BY n.pub_date ASC
 	`, userId)
 	if err != nil {
 		log.Printf("[x] Error when getting the list of feeds. Reason: %s", err.Error())
